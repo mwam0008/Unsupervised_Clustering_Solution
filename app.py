@@ -23,12 +23,11 @@ from utils import (
 
 st.set_page_config(
     page_title="Mall Customer Segmentation",
-    page_icon="🛍️",
     layout="wide"
 )
 
-st.title("🛍️ Mall Customer Segmentation")
-st.markdown("Group mall customers into segments using **K-Means Clustering** — an unsupervised ML algorithm.")
+st.title("Mall Customer Segmentation")
+st.markdown("Group mall customers into segments using **K-Means Clustering** - an unsupervised ML algorithm.")
 
 DATA_PATH = "mall_customers.csv"
 
@@ -39,22 +38,22 @@ def get_data():
 try:
     df = get_data()
 except Exception as e:
-    st.error(f"❌ Could not load mall_customers.csv. Error: {e}")
+    st.error(f"Could not load mall_customers.csv. Error: {e}")
     st.stop()
 
-st.sidebar.title("📂 Navigation")
+st.sidebar.title("Navigation")
 section = st.sidebar.radio("Choose a section:", [
-    "📊 Data Overview",
-    "🔍 Find Optimal K",
-    "🤖 Train & Visualize Clusters",
-    "🔮 Predict Customer Segment",
+    "Data Overview",
+    "Find Optimal K",
+    "Train & Visualize Clusters",
+    "Predict Customer Segment",
 ])
 
 # ════════════════════════════════════════════════════════════
-# SECTION 1 — Data Overview
+# SECTION 1 - Data Overview
 # ════════════════════════════════════════════════════════════
-if section == "📊 Data Overview":
-    st.header("📊 Data Overview")
+if section == "Data Overview":
+    st.header("Data Overview")
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Total Customers", df.shape[0])
@@ -67,19 +66,19 @@ if section == "📊 Data Overview":
 
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("👥 Gender Distribution")
+        st.subheader("Gender Distribution")
         fig = plot_gender_distribution(df)
         st.pyplot(fig)
     with col2:
-        st.subheader("📊 Correlation Heatmap")
+        st.subheader("Correlation Heatmap")
         fig = plot_correlation_heatmap(df)
         st.pyplot(fig)
 
-    st.subheader("📈 Feature Distributions")
+    st.subheader("Feature Distributions")
     fig = plot_feature_distributions(df)
     st.pyplot(fig)
 
-    st.subheader("🔗 Pairplot — Relationships Between Features")
+    st.subheader("Pairplot - Relationships Between Features")
     st.markdown("""
     Key observations from the notebook:
     - **Spending Score is high for ages 20–40**, and drops after 40
@@ -89,18 +88,18 @@ if section == "📊 Data Overview":
         fig = plot_pairplot(df)
         st.pyplot(fig)
 
-    st.subheader("📋 Dataset Statistics")
+    st.subheader("Dataset Statistics")
     st.dataframe(df.describe())
 
 # ════════════════════════════════════════════════════════════
-# SECTION 2 — Find Optimal K
+# SECTION 2 - Find Optimal K
 # ════════════════════════════════════════════════════════════
-elif section == "🔍 Find Optimal K":
-    st.header("🔍 Find the Optimal Number of Clusters (k)")
+elif section == "Find Optimal K":
+    st.header("Find the Optimal Number of Clusters (k)")
     st.markdown("""
     Two methods help us find the best k:
-    - **Elbow Method** — look for the "elbow" where WCSS stops dropping sharply
-    - **Silhouette Method** — higher score = better separated clusters (range: -1 to +1)
+    - **Elbow Method** - look for the "elbow" where WCSS stops dropping sharply
+    - **Silhouette Method** - higher score = better separated clusters (range: -1 to +1)
     """)
 
     feature_label = st.selectbox("Select Features", list(FEATURE_OPTIONS.keys()))
@@ -109,8 +108,8 @@ elif section == "🔍 Find Optimal K":
     k_min = st.slider("Min clusters to test", 2, 4, 2)
     k_max = st.slider("Max clusters to test", 5, 15, 10)
 
-    if st.button("🔍 Run Elbow + Silhouette Analysis"):
-        with st.spinner("Running analysis across all k values... ⏳"):
+    if st.button("Run Elbow + Silhouette Analysis"):
+        with st.spinner("Running analysis across all k values..."):
             try:
                 k_range = range(k_min, k_max + 1)
 
@@ -118,53 +117,53 @@ elif section == "🔍 Find Optimal K":
                 sil_df = silhouette_method(df, features, k_range)
                 optimal_k = find_optimal_k(sil_df)
 
-                st.success(f"✅ Analysis complete! Recommended k = **{optimal_k}**")
+                st.success(f"Analysis complete! Recommended k = **{optimal_k}**")
 
                 col1, col2 = st.columns(2)
                 col1.metric("Optimal k (by Silhouette)", optimal_k)
                 col2.metric("Best Silhouette Score",
                             f"{sil_df['Silhouette_Score'].max():.4f}")
 
-                st.subheader("📉 Elbow Plot (WCSS)")
-                st.markdown("Look for the 'elbow' — the point where the curve bends and flattens.")
+                st.subheader("Elbow Plot (WCSS)")
+                st.markdown("Look for the 'elbow' - the point where the curve bends and flattens.")
                 fig = plot_elbow(wss_df, optimal_k)
                 st.pyplot(fig)
 
-                st.subheader("📊 Silhouette Scores")
+                st.subheader("Silhouette Scores")
                 st.markdown("The tallest green bar = best k.")
                 fig = plot_silhouette(sil_df, optimal_k)
                 st.pyplot(fig)
 
-                st.subheader("📋 Raw Scores Table")
+                st.subheader("Raw Scores Table")
                 combined = wss_df.merge(sil_df, on='cluster')
                 st.dataframe(combined.round(4))
 
                 # Save optimal k to session
                 st.session_state['optimal_k'] = optimal_k
                 st.session_state['features'] = features
-                st.info(f"💡 Use **k = {optimal_k}** in the Train & Visualize section!")
+                st.info(f"Use **k = {optimal_k}** in the Train & Visualize section!")
 
             except Exception as e:
-                st.error(f"❌ Analysis failed: {e}")
+                st.error(f"Analysis failed: {e}")
 
 # ════════════════════════════════════════════════════════════
-# SECTION 3 — Train & Visualize Clusters
+# SECTION 3 - Train & Visualize Clusters
 # ════════════════════════════════════════════════════════════
-elif section == "🤖 Train & Visualize Clusters":
-    st.header("🤖 Train K-Means & Visualize Clusters")
+elif section == "Train & Visualize Clusters":
+    st.header("Train K-Means & Visualize Clusters")
 
-    st.sidebar.subheader("⚙️ Model Settings")
+    st.sidebar.subheader("Model Settings")
     feature_label = st.sidebar.selectbox("Features", list(FEATURE_OPTIONS.keys()))
     features = FEATURE_OPTIONS[feature_label]
 
     suggested_k = st.session_state.get('optimal_k', 5)
     n_clusters = st.sidebar.slider("Number of Clusters (k)", 2, 10, suggested_k)
     init_method = st.sidebar.selectbox("Init Method", ['k-means++', 'random'],
-        help="k-means++ is smarter — initializes centroids based on data patterns")
+        help="k-means++ is smarter - initializes centroids based on data patterns")
     max_iter = st.sidebar.slider("Max Iterations", 50, 500, 300, step=50)
 
-    if st.button("🚀 Train K-Means"):
-        with st.spinner(f"Training KMeans with k={n_clusters}... ⏳"):
+    if st.button("Train K-Means"):
+        with st.spinner(f"Training KMeans with k={n_clusters}..."):
             try:
                 kmodel, clustered_df = train_kmeans(
                     df, features, n_clusters,
@@ -177,10 +176,10 @@ elif section == "🤖 Train & Visualize Clusters":
                 st.session_state['kmodel'] = kmodel
                 st.session_state['trained_features'] = features
 
-                st.success(f"✅ KMeans trained with k={n_clusters}! Model saved.")
+                st.success(f"KMeans trained with k={n_clusters}! Model saved.")
 
                 # Cluster sizes
-                st.subheader("👥 Customers Per Cluster")
+                st.subheader("Customers Per Cluster")
                 col1, col2 = st.columns([1, 2])
                 with col1:
                     counts = clustered_df['Cluster'].value_counts().sort_index()
@@ -192,7 +191,7 @@ elif section == "🤖 Train & Visualize Clusters":
 
                 # 2D visualization (only if 2 features selected)
                 if len(features) == 2:
-                    st.subheader("🗺️ Cluster Visualization")
+                    st.subheader("Cluster Visualization")
                     centers = kmodel.cluster_centers_
                     fig = plot_clusters_2d(
                         clustered_df, features[0], features[1],
@@ -201,7 +200,7 @@ elif section == "🤖 Train & Visualize Clusters":
                     )
                     st.pyplot(fig)
                 else:
-                    st.subheader("🗺️ 2D Projections (3 feature mode)")
+                    st.subheader("2D Projections (3 feature mode)")
                     col1, col2 = st.columns(2)
                     with col1:
                         fig = plot_clusters_2d(clustered_df, 'Annual_Income',
@@ -213,57 +212,57 @@ elif section == "🤖 Train & Visualize Clusters":
                         st.pyplot(fig)
 
                 # Cluster profiles
-                st.subheader("📊 Cluster Profiles — Average Features")
+                st.subheader("Cluster Profiles - Average Features")
                 st.markdown("What does each cluster look like on average?")
                 fig = plot_cluster_profiles(clustered_df, features)
                 st.pyplot(fig)
 
                 # Cluster centroids table
-                st.subheader("📍 Cluster Centroids")
+                st.subheader("Cluster Centroids")
                 centers_df = pd.DataFrame(kmodel.cluster_centers_, columns=features)
                 centers_df.index.name = 'Cluster'
                 st.dataframe(centers_df.round(2))
 
                 # Segment interpretation
-                st.subheader("🧠 Segment Interpretation")
+                st.subheader("Segment Interpretation")
                 st.markdown("""
                 Based on **Income vs Spending Score** (k=5), typical segments are:
 
                 | Segment | Income | Spending | Who are they? |
                 |---|---|---|---|
-                | 🎯 High Value | High | High | Young spenders — prime marketing targets |
-                | 💰 Cautious Rich | High | Low | Earn a lot but save — hard to convert |
-                | 😐 Average | Medium | Medium | Typical shoppers |
-                | 🧓 Low Budget | Low | Low | Budget-conscious, older customers |
-                | 💸 Impulse | Low | High | Spend beyond means — young impulsive buyers |
+                | High Value | High | High | Young spenders - prime marketing targets |
+                | Cautious Rich | High | Low | Earn a lot but save - hard to convert |
+                | Average | Medium | Medium | Typical shoppers |
+                | Low Budget | Low | Low | Budget-conscious, older customers |
+                | Impulse | Low | High | Spend beyond means - young impulsive buyers |
                 """)
 
                 # Sample customers per cluster
-                st.subheader("👤 Sample Customers per Cluster")
+                st.subheader("Sample Customers per Cluster")
                 for cid in sorted(clustered_df['Cluster'].unique()):
-                    with st.expander(f"Cluster {cid} — sample customers"):
+                    with st.expander(f"Cluster {cid} - sample customers"):
                         st.dataframe(clustered_df[clustered_df['Cluster'] == cid].head(5))
 
             except Exception as e:
-                st.error(f"❌ Training failed: {e}")
+                st.error(f"Training failed: {e}")
                 import traceback
                 st.code(traceback.format_exc())
 
 # ════════════════════════════════════════════════════════════
-# SECTION 4 — Predict Customer Segment
+# SECTION 4 - Predict Customer Segment
 # ════════════════════════════════════════════════════════════
-elif section == "🔮 Predict Customer Segment":
-    st.header("🔮 Predict Customer Segment")
+elif section == "Predict Customer Segment":
+    st.header("Predict Customer Segment")
     st.markdown("Enter a new customer's details to find which segment they belong to.")
 
     try:
         kmodel = load_model('Cluster_Model.pkl')
         model_available = True
         n_features = kmodel.cluster_centers_.shape[1]
-        st.success(f"✅ Trained model loaded! ({kmodel.n_clusters} clusters, {n_features} features)")
+        st.success(f"Trained model loaded! ({kmodel.n_clusters} clusters, {n_features} features)")
     except Exception:
         model_available = False
-        st.warning("⚠️ No trained model found. Go to **Train & Visualize Clusters** first!")
+        st.warning("No trained model found. Go to **Train & Visualize Clusters** first!")
 
     if model_available:
         col1, col2 = st.columns(2)
@@ -280,7 +279,7 @@ elif section == "🔮 Predict Customer Segment":
                 age = None
                 st.info("Current model uses Income + Spending only (2 features). Retrain with 3 features to include Age.")
 
-        if st.button("🔮 Find My Segment"):
+        if st.button("Find My Segment"):
             try:
                 features_used = list(FEATURE_OPTIONS.values())[
                     0 if n_features == 2 else 1
@@ -288,7 +287,7 @@ elif section == "🔮 Predict Customer Segment":
                 cluster = predict_cluster(kmodel, income, spending, age, features_used)
 
                 st.divider()
-                st.success(f"### 🏷️ This customer belongs to **Cluster {cluster}**")
+                st.success(f"### This customer belongs to **Cluster {cluster}**")
 
                 # Show where they fall on the scatter if we have clustered_df
                 if 'clustered_df' in st.session_state:
@@ -315,8 +314,8 @@ elif section == "🔮 Predict Customer Segment":
                     col3.metric("Avg Spending Score", f"{cluster_data['Spending_Score'].mean():.1f}")
 
             except Exception as e:
-                st.error(f"❌ Prediction failed: {e}")
+                st.error(f"Prediction failed: {e}")
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("**CST2216 — Individual Term Project**")
-st.sidebar.markdown("Mall Customer Segmentation — K-Means")
+st.sidebar.markdown("**Project**")
+st.sidebar.markdown("Mall Customer Segmentation - K-Means")
