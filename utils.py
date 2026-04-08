@@ -87,7 +87,7 @@ def plot_clusters_2d(df: pd.DataFrame, x: str, y: str, centers=None, title=''):
 
 
 def plot_elbow(wss_df: pd.DataFrame, optimal_k: int = None):
-    """Elbow curve — WCSS vs number of clusters."""
+    """Elbow curve - WCSS vs number of clusters."""
     try:
         fig, ax = plt.subplots(figsize=(8, 4))
         ax.plot(wss_df['cluster'], wss_df['WCSS_Score'],
@@ -99,7 +99,7 @@ def plot_elbow(wss_df: pd.DataFrame, optimal_k: int = None):
             ax.scatter([optimal_k], [best_wcss], color='red', s=150, zorder=5)
         ax.set_xlabel('Number of Clusters (k)', fontweight='bold')
         ax.set_ylabel('WCSS Score (Inertia)', fontweight='bold')
-        ax.set_title('Elbow Method — Find Optimal k', fontweight='bold')
+        ax.set_title('Elbow Method - Find Optimal k', fontweight='bold')
         ax.grid(True, alpha=0.3)
         if optimal_k:
             ax.legend()
@@ -127,7 +127,7 @@ def plot_silhouette(sil_df: pd.DataFrame, optimal_k: int = None):
             ax.legend()
         ax.set_xlabel('Number of Clusters (k)', fontweight='bold')
         ax.set_ylabel('Silhouette Score', fontweight='bold')
-        ax.set_title('Silhouette Method — Higher is Better', fontweight='bold')
+        ax.set_title('Silhouette Method - Higher is Better', fontweight='bold')
         ax.set_ylim(0, sil_df['Silhouette_Score'].max() + 0.05)
         plt.tight_layout()
         return fig
