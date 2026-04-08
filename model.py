@@ -16,9 +16,9 @@ warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 FEATURE_OPTIONS = {
-    "Income + Spending (2D — visualizable)": ['Annual_Income', 'Spending_Score'],
+    "Income + Spending (2D - visualizable)": ['Annual_Income', 'Spending_Score'],
     "Age + Income + Spending (3D)": ['Age', 'Annual_Income', 'Spending_Score'],
-    "Age + Spending (2D — visualizable)": ['Age', 'Spending_Score'],
+    "Age + Spending (2D - visualizable)": ['Age', 'Spending_Score'],
 }
 
 
