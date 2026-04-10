@@ -134,8 +134,8 @@ elif section == "Find Optimal K":
     st.header("Find the Optimal Number of Clusters (k)")
     st.markdown("""
     Two methods help us find the best k:
-    - **Elbow Method** — look for the "elbow" where WCSS stops dropping sharply
-    - **Silhouette Method** — higher score = better separated clusters (range: −1 to +1)
+    - **Elbow Method** - look for the "elbow" where WCSS stops dropping sharply
+    - **Silhouette Method** - higher score = better separated clusters (range: −1 to +1)
     """)
 
     feature_label = st.selectbox("Select Features", list(FEATURE_OPTIONS.keys()))
@@ -164,7 +164,7 @@ elif section == "Find Optimal K":
                 col2.metric("Best Silhouette Score", f"{best_sil:.4f}")
 
                 st.subheader("Elbow Plot (WCSS)")
-                st.markdown("Look for the 'elbow' — the point where the curve bends and flattens.")
+                st.markdown("Look for the 'elbow' - the point where the curve bends and flattens.")
                 st.pyplot(plot_elbow(wss_df, optimal_k))
 
                 st.subheader("Silhouette Scores")
@@ -268,7 +268,7 @@ elif section == "Train & Visualize Clusters":
                 | Segment | Income | Spending | Who are they? |
                 |---|---|---|---|
                 | High Value | High | High | Young spenders — prime marketing targets |
-                | Cautious Rich | High | Low | Earn a lot but save — hard to convert |
+                | Cautious Rich | High | Low | Earn a lot but save - hard to convert |
                 | Average | Medium | Medium | Typical shoppers |
                 | Low Budget | Low | Low | Budget-conscious, older customers |
                 | Impulse | Low | High | Spend beyond means — young impulsive buyers |
@@ -397,5 +397,5 @@ elif section == "Activity Log":
 # ── Footer ────────────────────────────────────────────────────
 st.sidebar.markdown("---")
 st.sidebar.markdown("**Project**")
-st.sidebar.markdown("Mall Customer Segmentation — K-Means")
-st.sidebar.markdown(f"📋 Log lines: {get_log_line_count()}")
+st.sidebar.markdown("Mall Customer Segmentation - K-Means")
+st.sidebar.markdown(f"Log lines: {get_log_line_count()}")
